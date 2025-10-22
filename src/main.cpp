@@ -7,12 +7,26 @@
 
 #include <stb_image.h>
 
+#include <glm/mat4x4.hpp> 
+#include <glm/ext/matrix_transform.hpp> 
+#include <glm/ext/matrix_clip_space.hpp> 
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE "3D Game Engine"
 
 void processInput(GLFWwindow* window);
 const char* readConfigFile(const char* filename);
+
+struct Camera {
+	glm::vec3 pos;
+	glm::vec3 front;
+	glm::vec3 up;
+};
+
+Camera camera = { glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)};
+float deltaTime;
+float lastFrame;
 
 int main()
 {
@@ -53,6 +67,7 @@ int main()
 	if(data != NULL) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+		std::cout << "DEBUG::IMAGE HAS BEEN LOADED" << std::endl;
 	} else {
 		std::cerr << "Failed to load texture" << std::endl;
 	}
@@ -107,9 +122,6 @@ int main()
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
 
-	std::cout << vertexShaderSource << std::endl;
-	std::cout << fragmentShaderSource << std::endl;
-
 	// Load The triangle Vertices to the GPU
 	float triangle_vertices[] = {
 		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
@@ -133,10 +145,33 @@ int main()
 	glBindVertexArray(0);
 
 	while(!glfwWindowShouldClose(window)) {
+
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		processInput(window);
 		glClear(GL_COLOR_BUFFER_BIT);
 
+		//MVP
+		glm::mat4 model = glm::mat4(1.0f);
+		glm::mat4 view = glm::mat4(1.0f);
+		glm::mat4 projection = glm::mat4(1.0f);
+
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+		view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
+		projection = glm::perspective(45.0f, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
+
+		//Send MVP to GPU
 		glUseProgram(shaderProgram);
+
+		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
+		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
+
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
@@ -150,9 +185,27 @@ int main()
 
 void processInput(GLFWwindow* window)
 {
+	float scalar = deltaTime * 2.5f;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		camera.pos += camera.front * scalar;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		camera.pos -= camera.front * scalar;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		camera.pos += glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		camera.pos -= glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
+	}
+
 }
 
 const char* readConfigFile(const char* filename)
