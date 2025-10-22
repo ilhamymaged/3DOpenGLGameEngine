@@ -1,0 +1,9 @@
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/CMakeFiles/CMakeTarget.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/CMakeFiles/edit_cache.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/CMakeFiles/rebuild_cache.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/glfw/CMakeFiles/edit_cache.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/glfw/CMakeFiles/rebuild_cache.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/glfw/src/CMakeFiles/glfw.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/glfw/src/CMakeFiles/update_mappings.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/glfw/src/CMakeFiles/edit_cache.dir
+C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/glfw/src/CMakeFiles/rebuild_cache.dir
