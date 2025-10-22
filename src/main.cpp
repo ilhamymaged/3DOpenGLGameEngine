@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+#include <stb_image.h>
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE "3D Game Engine"
@@ -35,6 +37,21 @@ int main()
 		std::cerr << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+
+	//Load an image
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	int width, height, nrChannels;
+	unsigned char* data = stbi_load("Textures/highqualitybrick.jpg", &width, &height, &nrChannels, 0);
+	if(data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	} else {
+		std::cerr << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
 
 	//Make the Shader program
 	const char* vertexShaderSource = readConfigFile("shaders/default.v");

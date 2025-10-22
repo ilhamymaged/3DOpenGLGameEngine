@@ -1,7 +1,7 @@
 # ninja log v6
-74	420	7828617218009910	CMakeFiles/CMakeTarget.dir/src/main.cpp.obj	33b0e58e24424076
+12	761	7828704718103893	CMakeFiles/CMakeTarget.dir/src/main.cpp.obj	33b0e58e24424076
 45	473	7828610579381686	thirdparty/glfw/src/CMakeFiles/glfw.dir/window.c.obj	a1abf86b20552d4f
-421	594	7828617221483430	CMakeTarget.exe	75d86d1b5562b74
+491	652	7828705975710357	CMakeTarget.exe	3ab4439f6647dfb3
 73	410	7828610579651678	thirdparty/glfw/src/CMakeFiles/glfw.dir/null_joystick.c.obj	604b448c32a3fe19
 64	454	7828610579561674	thirdparty/glfw/src/CMakeFiles/glfw.dir/null_monitor.c.obj	e50a7f3215b356d1
 68	436	7828610579611683	thirdparty/glfw/src/CMakeFiles/glfw.dir/null_window.c.obj	6f03dc760eb0007d
@@ -24,9 +24,4 @@
 473	844	7828610583659879	thirdparty/glfw/src/CMakeFiles/glfw.dir/win32_window.c.obj	3aee2dc5bdea549a
 844	894	7828610587364083	thirdparty/glfw/src/glfw3.lib	c804fcd81e26c424
 69	429	7828616041547274	CMakeFiles/CMakeTarget.dir/src/glad.c.obj	9a524a55613c77b3
-7	397	7828624637293732	CMakeFiles/CMakeTarget.dir/src/main.cpp.obj	33b0e58e24424076
-397	570	7828624641201368	CMakeTarget.exe	75d86d1b5562b74
-65	464	7828625490711179	CMakeFiles/CMakeTarget.dir/src/main.cpp.obj	33b0e58e24424076
-464	608	7828625494701755	CMakeTarget.exe	75d86d1b5562b74
-79	480	7828627233729143	CMakeFiles/CMakeTarget.dir/src/main.cpp.obj	33b0e58e24424076
-481	623	7828627237737832	CMakeTarget.exe	75d86d1b5562b74
+66	491	7828705971451424	CMakeFiles/CMakeTarget.dir/src/stb_image.cpp.obj	cc63fbcf00dce37d

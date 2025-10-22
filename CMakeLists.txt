@@ -25,6 +25,7 @@ target_link_libraries(CMakeTarget PRIVATE glfw)
 
 #Copies Shaders to output directory
 file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
 
 
 if (WIN32)
