@@ -27,7 +27,6 @@ target_link_libraries(CMakeTarget PRIVATE glfw)
 file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
 file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
 
-
 if (WIN32)
     target_link_libraries(CMakeTarget PRIVATE opengl32)
 endif()
