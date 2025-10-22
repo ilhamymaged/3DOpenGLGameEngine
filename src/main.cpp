@@ -17,16 +17,25 @@
 
 void processInput(GLFWwindow* window);
 const char* readConfigFile(const char* filename);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 struct Camera {
 	glm::vec3 pos;
 	glm::vec3 front;
 	glm::vec3 up;
+
+	float fov;
 };
 
-Camera camera = { glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f)};
+Camera camera = { glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), 
+				  glm::vec3(0.0f, 1.0f, 0.0f), 45.0f};
 float deltaTime;
 float lastFrame;
+float lastX = WINDOW_WIDTH/2.0, lastY = WINDOW_HEIGHT/2.0;
+bool firstMouse = true;
+float yaw = -90.0f;
+float pitch = 0.0f;
 
 int main()
 {
@@ -51,6 +60,15 @@ int main()
 		std::cerr << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
+
+	//GLFW General Settings
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
+	glfwSwapInterval(0);
+
+	//OPENGL General Settings
+	glEnable(GL_DEPTH_TEST);
 
 	//Load an image
 	GLuint texture;
@@ -151,7 +169,7 @@ int main()
 		lastFrame = currentFrame;
 
 		processInput(window);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//MVP
 		glm::mat4 model = glm::mat4(1.0f);
@@ -160,7 +178,7 @@ int main()
 
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
 		view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
-		projection = glm::perspective(45.0f, (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(camera.fov), (float)WINDOW_WIDTH/WINDOW_HEIGHT,0.1f,100.0f);
 
 		//Send MVP to GPU
 		glUseProgram(shaderProgram);
@@ -206,6 +224,11 @@ void processInput(GLFWwindow* window)
 		camera.pos -= glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
 	}
 
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		camera.pos += camera.up * scalar;
+	}
+
+
 }
 
 const char* readConfigFile(const char* filename)
@@ -222,3 +245,45 @@ const char* readConfigFile(const char* filename)
 	return buffer;
 }
 
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+	if (firstMouse) 
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos; 
+	lastX = xpos;
+	lastY = ypos;
+
+	const float sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	camera.front = glm::normalize(direction);
+
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	camera.fov -= (float)yoffset * 5.0f;
+	if (camera.fov < 1.0f)
+		camera.fov = 1.0f;
+	if (camera.fov > 45.0f)
+		camera.fov = 45.0f;
+}
