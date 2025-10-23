@@ -11,6 +11,10 @@
 #include <glm/ext/matrix_transform.hpp> 
 #include <glm/ext/matrix_clip_space.hpp> 
 
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE "3D Game Engine"
@@ -36,6 +40,8 @@ float lastX = WINDOW_WIDTH/2.0, lastY = WINDOW_HEIGHT/2.0;
 bool firstMouse = true;
 float yaw = -90.0f;
 float pitch = 0.0f;
+bool paused = false;
+bool ctrlPressedLastFrame = false;
 
 int main()
 {
@@ -69,6 +75,18 @@ int main()
 
 	//OPENGL General Settings
 	glEnable(GL_DEPTH_TEST);
+
+	// Setup Dear ImGui context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 460");
 
 	//Load an image
 	GLuint texture;
@@ -162,13 +180,19 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
-	while(!glfwWindowShouldClose(window)) {
+	bool opened = true;
+	const char* items[] = {"sphere", "monkey"};
+
+	glm::vec3 pos = glm::vec3(0.0, 0.0, -3.0);
+
+	while (!glfwWindowShouldClose(window)) {
 
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		processInput(window);
+		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		//MVP
@@ -176,9 +200,9 @@ int main()
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection = glm::mat4(1.0f);
 
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -3.0f));
+		model = glm::translate(model, pos);
 		view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
-		projection = glm::perspective(glm::radians(camera.fov), (float)WINDOW_WIDTH/WINDOW_HEIGHT,0.1f,100.0f);
+		projection = glm::perspective(glm::radians(camera.fov), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
 
 		//Send MVP to GPU
 		glUseProgram(shaderProgram);
@@ -193,42 +217,90 @@ int main()
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
+		//ImGui
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		//Rendering ImGui Here
+		ImGui::SetNextWindowSize(ImVec2(300, 400));
+		if (ImGui::Begin("Test", &opened, ImGuiWindowFlags_NoResize |
+			ImGuiWindowFlags_NoCollapse)) {
+			
+			if (ImGui::Button("Hello, world!")) {
+				std::cout << "Hello, world!" << std::endl;
+			}
+
+			float f = 5.0; 
+			int current = 0;
+			ImGui::Checkbox("Enable Shadows", &opened);
+			ImGui::DragFloat3("Test Float", &pos[0], 0.05f);
+			ImGui::Combo("Objects", &current, items, IM_ARRAYSIZE(items));
+
+		}ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
+	//Shutdowning ImGui
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
+	//Destroying the window
 	glfwDestroyWindow(window);
 	glfwTerminate();
 }
 
 void processInput(GLFWwindow* window)
 {
-	float scalar = deltaTime * 2.5f;
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		camera.pos += camera.front * scalar;
+	if (!paused) {
+		float scalar = deltaTime * 2.5f;
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			camera.pos += camera.front * scalar;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+			camera.pos -= camera.front * scalar;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+			camera.pos += glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+			camera.pos -= glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			camera.pos += camera.up * scalar;
+		}
+
 	}
 
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		camera.pos -= camera.front * scalar;
+	bool ctrlPressed = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
+	if (ctrlPressed && !ctrlPressedLastFrame) {
+		paused = !paused;
+
+		if (paused) {
+			// Show cursor and stop camera input
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			firstMouse = true; // reset mouse to avoid jump when unpausing
+		}
+		else {
+			// Hide cursor and resume camera input
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
 	}
-
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		camera.pos += glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		camera.pos -= glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-		camera.pos += camera.up * scalar;
-	}
-
-
+	ctrlPressedLastFrame = ctrlPressed;
 }
 
 const char* readConfigFile(const char* filename)
@@ -247,6 +319,8 @@ const char* readConfigFile(const char* filename)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	if (paused) return; 
+
 	if (firstMouse) 
 	{
 		lastX = xpos;

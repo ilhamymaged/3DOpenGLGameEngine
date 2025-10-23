@@ -10,6 +10,9 @@ set(GLFW_INSTALL OFF CACHE BOOL "" FORCE)
 #Add GLFW 
 add_subdirectory(thirdparty/glfw)
 
+#Add IamGui
+add_subdirectory(thirdparty/imgui)
+
 #Collect source files
 file(GLOB_RECURSE SRC_FILES src/*.cpp)
 list(APPEND SRC_FILES src/glad.c)
@@ -21,7 +24,7 @@ add_executable (CMakeTarget ${SRC_FILES})
 target_include_directories(CMakeTarget PRIVATE include)
 
 #Link libraries
-target_link_libraries(CMakeTarget PRIVATE glfw)
+target_link_libraries(CMakeTarget PRIVATE glfw ImGui)
 
 #Copies Shaders to output directory
 file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})

@@ -47,27 +47,30 @@ cmake_ninja_workdir = C$:\Users\ilhamy\Documents\projects\3DGameEngine\out\build
 #############################################
 # Order-only phony target for CMakeTarget
 
-build cmake_object_order_depends_target_CMakeTarget: phony || cmake_object_order_depends_target_glfw
+build cmake_object_order_depends_target_CMakeTarget: phony || cmake_object_order_depends_target_ImGui cmake_object_order_depends_target_glfw
 
 build CMakeFiles\CMakeTarget.dir\src\main.cpp.obj: CXX_COMPILER__CMakeTarget_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\src\main.cpp || cmake_object_order_depends_target_CMakeTarget
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
-  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends
   OBJECT_DIR = CMakeFiles\CMakeTarget.dir
   OBJECT_FILE_DIR = CMakeFiles\CMakeTarget.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\CMakeTarget.dir\
   TARGET_PDB = CMakeTarget.pdb
 
 build CMakeFiles\CMakeTarget.dir\src\stb_image.cpp.obj: CXX_COMPILER__CMakeTarget_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\src\stb_image.cpp || cmake_object_order_depends_target_CMakeTarget
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
-  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends
   OBJECT_DIR = CMakeFiles\CMakeTarget.dir
   OBJECT_FILE_DIR = CMakeFiles\CMakeTarget.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\CMakeTarget.dir\
   TARGET_PDB = CMakeTarget.pdb
 
 build CMakeFiles\CMakeTarget.dir\src\glad.c.obj: C_COMPILER__CMakeTarget_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\src\glad.c || cmake_object_order_depends_target_CMakeTarget
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
   FLAGS = /DWIN32 /D_WINDOWS /W3 /MD /Zi /O2 /Ob1 /DNDEBUG
-  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends
   OBJECT_DIR = CMakeFiles\CMakeTarget.dir
   OBJECT_FILE_DIR = CMakeFiles\CMakeTarget.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\CMakeTarget.dir\
@@ -81,10 +84,10 @@ build CMakeFiles\CMakeTarget.dir\src\glad.c.obj: C_COMPILER__CMakeTarget_unscann
 #############################################
 # Link the executable CMakeTarget.exe
 
-build CMakeTarget.exe: CXX_EXECUTABLE_LINKER__CMakeTarget_RelWithDebInfo CMakeFiles\CMakeTarget.dir\src\main.cpp.obj CMakeFiles\CMakeTarget.dir\src\stb_image.cpp.obj CMakeFiles\CMakeTarget.dir\src\glad.c.obj | thirdparty\glfw\src\glfw3.lib || thirdparty\glfw\src\glfw3.lib
+build CMakeTarget.exe: CXX_EXECUTABLE_LINKER__CMakeTarget_RelWithDebInfo CMakeFiles\CMakeTarget.dir\src\main.cpp.obj CMakeFiles\CMakeTarget.dir\src\stb_image.cpp.obj CMakeFiles\CMakeTarget.dir\src\glad.c.obj | thirdparty\glfw\src\glfw3.lib thirdparty\imgui\ImGui.lib thirdparty\glfw\src\glfw3.lib || thirdparty\glfw\src\glfw3.lib thirdparty\imgui\ImGui.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
-  LINK_LIBRARIES = thirdparty\glfw\src\glfw3.lib  opengl32.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
+  LINK_LIBRARIES = thirdparty\glfw\src\glfw3.lib  thirdparty\imgui\ImGui.lib  opengl32.lib  thirdparty\glfw\src\glfw3.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib
   OBJECT_DIR = CMakeFiles\CMakeTarget.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
@@ -403,9 +406,131 @@ build thirdparty\glfw\src\CMakeFiles\update_mappings | ${cmake_ninja_workdir}thi
   DESC = Updating gamepad mappings from upstream repository
 
 # =============================================================================
+# Write statements declared in CMakeLists.txt:
+# C:/Users/ilhamy/Documents/projects/3DGameEngine/CMakeLists.txt
+# =============================================================================
+
+# =============================================================================
+# Object build statements for STATIC_LIBRARY target ImGui
+
+
+#############################################
+# Order-only phony target for ImGui
+
+build cmake_object_order_depends_target_ImGui: phony || cmake_object_order_depends_target_glfw
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\imgui.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\imgui.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_demo.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\imgui_demo.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_draw.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\imgui_draw.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_tables.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\imgui_tables.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_widgets.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\imgui_widgets.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\backends\imgui_impl_glfw.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends\imgui_impl_glfw.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir\backends
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+build thirdparty\imgui\CMakeFiles\ImGui.dir\backends\imgui_impl_opengl3.cpp.obj: CXX_COMPILER__ImGui_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends\imgui_impl_opengl3.cpp || cmake_object_order_depends_target_ImGui
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  OBJECT_FILE_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir\backends
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+
+# =============================================================================
+# Link build statements for STATIC_LIBRARY target ImGui
+
+
+#############################################
+# Link the static library thirdparty\imgui\ImGui.lib
+
+build thirdparty\imgui\ImGui.lib: CXX_STATIC_LIBRARY_LINKER__ImGui_RelWithDebInfo thirdparty\imgui\CMakeFiles\ImGui.dir\imgui.cpp.obj thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_demo.cpp.obj thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_draw.cpp.obj thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_tables.cpp.obj thirdparty\imgui\CMakeFiles\ImGui.dir\imgui_widgets.cpp.obj thirdparty\imgui\CMakeFiles\ImGui.dir\backends\imgui_impl_glfw.cpp.obj thirdparty\imgui\CMakeFiles\ImGui.dir\backends\imgui_impl_opengl3.cpp.obj || thirdparty\glfw\src\glfw3.lib
+  LANGUAGE_COMPILE_FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  LINK_FLAGS = /machine:x64
+  OBJECT_DIR = thirdparty\imgui\CMakeFiles\ImGui.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = thirdparty\imgui\CMakeFiles\ImGui.dir\ImGui.pdb
+  TARGET_FILE = thirdparty\imgui\ImGui.lib
+  TARGET_PDB = thirdparty\imgui\ImGui.pdb
+
+
+#############################################
+# Utility command for edit_cache
+
+build thirdparty\imgui\CMakeFiles\edit_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D C:\Users\ilhamy\Documents\projects\3DGameEngine\out\build\x64-Release\thirdparty\imgui && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo "No interactive CMake dialog available.""
+  DESC = No interactive CMake dialog available...
+  restat = 1
+
+build thirdparty\imgui\edit_cache: phony thirdparty\imgui\CMakeFiles\edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build thirdparty\imgui\CMakeFiles\rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = C:\Windows\system32\cmd.exe /C "cd /D C:\Users\ilhamy\Documents\projects\3DGameEngine\out\build\x64-Release\thirdparty\imgui && "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" --regenerate-during-build -SC:\Users\ilhamy\Documents\projects\3DGameEngine -BC:\Users\ilhamy\Documents\projects\3DGameEngine\out\build\x64-Release"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build thirdparty\imgui\rebuild_cache: phony thirdparty\imgui\CMakeFiles\rebuild_cache.util
+
+# =============================================================================
 # Target aliases.
 
 build CMakeTarget: phony CMakeTarget.exe
+
+build ImGui: phony thirdparty\imgui\ImGui.lib
+
+build ImGui.lib: phony thirdparty\imgui\ImGui.lib
 
 build glfw: phony thirdparty\glfw\src\glfw3.lib
 
@@ -421,7 +546,7 @@ build update_mappings: phony thirdparty\glfw\src\update_mappings
 #############################################
 # Folder: C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release
 
-build all: phony CMakeTarget.exe thirdparty\glfw\all
+build all: phony CMakeTarget.exe thirdparty\glfw\all thirdparty\imgui\all
 
 # =============================================================================
 
@@ -438,20 +563,27 @@ build thirdparty\glfw\all: phony thirdparty\glfw\src\all
 build thirdparty\glfw\src\all: phony thirdparty\glfw\src\glfw3.lib
 
 # =============================================================================
+
+#############################################
+# Folder: C:/Users/ilhamy/Documents/projects/3DGameEngine/out/build/x64-Release/thirdparty/imgui
+
+build thirdparty\imgui\all: phony thirdparty\imgui\ImGui.lib
+
+# =============================================================================
 # Built-in targets
 
 
 #############################################
 # Re-run CMake if any of its inputs changed.
 
-build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\BasicConfigVersion-SameMajorVersion.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeDependentOption.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\ilhamy\Documents\projects\3DGameEngine\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3.pc.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3Config.cmake.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\src\CMakeLists.txt CMakeCache.txt CMakeFiles\3.31.6-msvc6\CMakeCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeCXXCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeRCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeSystem.cmake
+build build.ninja: RERUN_CMAKE | C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\BasicConfigVersion-SameMajorVersion.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeDependentOption.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\ilhamy\Documents\projects\3DGameEngine\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3.pc.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3Config.cmake.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\src\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\CMakeLists.txt CMakeCache.txt CMakeFiles\3.31.6-msvc6\CMakeCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeCXXCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeRCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeSystem.cmake
   pool = console
 
 
 #############################################
 # A missing CMake input file is not an error.
 
-build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\BasicConfigVersion-SameMajorVersion.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeDependentOption.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\ilhamy\Documents\projects\3DGameEngine\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3.pc.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3Config.cmake.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\src\CMakeLists.txt CMakeCache.txt CMakeFiles\3.31.6-msvc6\CMakeCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeCXXCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeRCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeSystem.cmake: phony
+build C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\BasicConfigVersion-SameMajorVersion.cmake.in C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCXXInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeCommonLanguageInclude.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeDependentOption.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeGenericSystem.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeInitializeConfigs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeLanguageInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakePackageConfigHelpers.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeRCInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CMakeSystemSpecificInitialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckCSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckIncludeFile.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\CheckLibraryExists.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\CMakeCommonCompilerMacros.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Compiler\MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageHandleStandardArgs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindPackageMessage.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\FindThreads.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\GNUInstallDirs.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCXXLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CMakeCommonLinkerInformation.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Internal\CheckSourceCompiles.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Linker\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-Initialize.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-C.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC-CXX.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows-MSVC.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\Windows.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\Platform\WindowsPaths.cmake C$:\Program$ Files\Microsoft$ Visual$ Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\share\cmake-3.31\Modules\WriteBasicConfigVersionFile.cmake C$:\Users\ilhamy\Documents\projects\3DGameEngine\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3.pc.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\CMake\glfw3Config.cmake.in C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\src\CMakeLists.txt C$:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\CMakeLists.txt CMakeCache.txt CMakeFiles\3.31.6-msvc6\CMakeCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeCXXCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeRCCompiler.cmake CMakeFiles\3.31.6-msvc6\CMakeSystem.cmake: phony
 
 
 #############################################
