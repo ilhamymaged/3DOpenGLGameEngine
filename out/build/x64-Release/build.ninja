@@ -67,7 +67,25 @@ build CMakeFiles\CMakeTarget.dir\src\InputHandler.cpp.obj: CXX_COMPILER__CMakeTa
   TARGET_COMPILE_PDB = CMakeFiles\CMakeTarget.dir\
   TARGET_PDB = CMakeTarget.pdb
 
+build CMakeFiles\CMakeTarget.dir\src\Mesh.cpp.obj: CXX_COMPILER__CMakeTarget_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\src\Mesh.cpp || cmake_object_order_depends_target_CMakeTarget
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends
+  OBJECT_DIR = CMakeFiles\CMakeTarget.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMakeTarget.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\CMakeTarget.dir\
+  TARGET_PDB = CMakeTarget.pdb
+
 build CMakeFiles\CMakeTarget.dir\src\Shader.cpp.obj: CXX_COMPILER__CMakeTarget_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\src\Shader.cpp || cmake_object_order_depends_target_CMakeTarget
+  DEFINES = -DIMGUI_ENABLE_DOCKING=1
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
+  INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends
+  OBJECT_DIR = CMakeFiles\CMakeTarget.dir
+  OBJECT_FILE_DIR = CMakeFiles\CMakeTarget.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\CMakeTarget.dir\
+  TARGET_PDB = CMakeTarget.pdb
+
+build CMakeFiles\CMakeTarget.dir\src\Texture.cpp.obj: CXX_COMPILER__CMakeTarget_unscanned_RelWithDebInfo C$:\Users\ilhamy\Documents\projects\3DGameEngine\src\Texture.cpp || cmake_object_order_depends_target_CMakeTarget
   DEFINES = -DIMGUI_ENABLE_DOCKING=1
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
   INCLUDES = -IC:\Users\ilhamy\Documents\projects\3DGameEngine\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\glfw\include -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui -IC:\Users\ilhamy\Documents\projects\3DGameEngine\thirdparty\imgui\backends
@@ -120,7 +138,7 @@ build CMakeFiles\CMakeTarget.dir\src\glad.c.obj: C_COMPILER__CMakeTarget_unscann
 #############################################
 # Link the executable CMakeTarget.exe
 
-build CMakeTarget.exe: CXX_EXECUTABLE_LINKER__CMakeTarget_RelWithDebInfo CMakeFiles\CMakeTarget.dir\src\Camera.cpp.obj CMakeFiles\CMakeTarget.dir\src\InputHandler.cpp.obj CMakeFiles\CMakeTarget.dir\src\Shader.cpp.obj CMakeFiles\CMakeTarget.dir\src\WindowManager.cpp.obj CMakeFiles\CMakeTarget.dir\src\main.cpp.obj CMakeFiles\CMakeTarget.dir\src\stb_image.cpp.obj CMakeFiles\CMakeTarget.dir\src\glad.c.obj | thirdparty\glfw\src\glfw3.lib thirdparty\imgui\ImGui.lib thirdparty\glfw\src\glfw3.lib || thirdparty\glfw\src\glfw3.lib thirdparty\imgui\ImGui.lib
+build CMakeTarget.exe: CXX_EXECUTABLE_LINKER__CMakeTarget_RelWithDebInfo CMakeFiles\CMakeTarget.dir\src\Camera.cpp.obj CMakeFiles\CMakeTarget.dir\src\InputHandler.cpp.obj CMakeFiles\CMakeTarget.dir\src\Mesh.cpp.obj CMakeFiles\CMakeTarget.dir\src\Shader.cpp.obj CMakeFiles\CMakeTarget.dir\src\Texture.cpp.obj CMakeFiles\CMakeTarget.dir\src\WindowManager.cpp.obj CMakeFiles\CMakeTarget.dir\src\main.cpp.obj CMakeFiles\CMakeTarget.dir\src\stb_image.cpp.obj CMakeFiles\CMakeTarget.dir\src\glad.c.obj | thirdparty\glfw\src\glfw3.lib thirdparty\imgui\ImGui.lib thirdparty\glfw\src\glfw3.lib || thirdparty\glfw\src\glfw3.lib thirdparty\imgui\ImGui.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MD /Zi /O2 /Ob1 /DNDEBUG
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = thirdparty\glfw\src\glfw3.lib  thirdparty\imgui\ImGui.lib  opengl32.lib  thirdparty\glfw\src\glfw3.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

@@ -22,9 +22,6 @@ WindowManager::WindowManager(const char* title, int width, int height)
 	}
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	//glfwSetCursorPosCallback(window, mouse_callback);
-	//glfwSetScrollCallback(window, scroll_callback);
-	glfwSwapInterval(0);
 }
 
 WindowManager::~WindowManager()

@@ -1,13 +1,21 @@
+//#ifdef _WIN32
+//#include <windows.h>
+
+//int main();
+
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd) {
+	//return main();
+//}
+//#endif
+
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include <fstream>
 #include <string>
 #include <iostream>
 
 #include <vector>
-
-#include <stb_image.h>
 
 #include <glm/mat4x4.hpp> 
 #include <glm/ext/matrix_transform.hpp> 
@@ -20,12 +28,15 @@
 #include <WindowManager.h>
 #include <InputHandler.h>
 #include <Camera.h>
+#include <Shader.h>
+#include <Texture.h>
+#include <Mesh.h>
+
+#include <filesystem>
 
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE "3D Game Engine"
-
-const char* readConfigFile(const char* filename);
 
 int main()
 {
@@ -35,134 +46,120 @@ int main()
 
 	glfwSetWindowUserPointer(windowManager.getWindow(), &inputHandler);
 	glfwSetCursorPosCallback(windowManager.getWindow(), InputHandler::mouse_callback);
-	glfwSetScrollCallback(windowManager.getWindow(), InputHandler::scroll_callback);;
+	glfwSetScrollCallback(windowManager.getWindow(), InputHandler::scroll_callback);
+
+	glfwSwapInterval(0);
 
 	glEnable(GL_DEPTH_TEST);
 
-	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
 
-	// Setup Platform/Renderer bindings
 	ImGui_ImplGlfw_InitForOpenGL(windowManager.getWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
-	//Load an image
-	GLuint texture;
-	glGenTextures(1, &texture);
+	Shader shader("default");
+	Shader lightShader("light");
 
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	Texture texture0("highqualitybrick.jpg");
+	Texture texture1("stone03d.jpg");
 
-	float maxAniso = 0.0f;
-	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso);
+	Mesh cubeMesh = Mesh::generateBlock();
+	Mesh lightCubeMesh = Mesh::generateLightBlock();
 
-	stbi_set_flip_vertically_on_load(true);
+	//Draw a chunk of cubes 
+	int chunkSize = 16; //16x16
+	int chunkHeight = 12;
+	glm::vec3 chunkPos(0.0f, 0.0f, 0.0f);
+	std::vector<glm::vec3> cubePositions;
 
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("assets/Textures/highqualitybrick.jpg", &width, &height, &nrChannels, 0);
-	if(data != NULL) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-		std::cout << "DEBUG::IMAGE HAS BEEN LOADED" << std::endl;
-	} else {
-		std::cerr << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-
-	//Make the Shader program
-	const char* vertexShaderSource = readConfigFile("shaders/default.v");
-	const char* fragmentShaderSource = readConfigFile("shaders/default.f");
-
-	//Create Vertex Shader
-	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-	glCompileShader(vertexShader);
-
-	//Debugging Vertex Shader Compilation
-	GLint success;
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-	if(!success) {
-		GLchar infoLog[512];
-		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+	for (int x = 0; x < chunkSize; x++) {
+		for (int y = -chunkHeight; y < 0; y++) {
+			for (int z = -chunkSize; z < 0; z++) {
+				glm::vec3 cubePos = glm::vec3(x, y, z) + chunkPos;
+				cubePositions.push_back(cubePos);
+			}
+		}
 	}
 
-	//Create Fragment Shader
-	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-	glCompileShader(fragmentShader);
+	GLuint instanceVBO;
+	glGenBuffers(1, &instanceVBO);
 
-	//Debugging Fragment Shader Compilation
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-	if(!success) {
-		GLchar infoLog[512];
-		glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-	}
-
-	//Create Shader Program
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
-
-	//Debugging Shader Program Linking
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-	if(!success) {
-		GLchar infoLog[512];
-		glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-	}
-
-	//Deleting the shaders as they are linked into our program now and no longer necessary
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
-
-	// Load The triangle Vertices to the GPU
-	float triangle_vertices[] = {
-		-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-		 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-		 0.0f,  0.5f, 0.0f, 0.5f, 1.0f
-	};
-
-	GLuint VBO, VAO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle_vertices), triangle_vertices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+	glBufferData(GL_ARRAY_BUFFER, cubePositions.size() * sizeof(glm::vec3), &cubePositions[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(cubeMesh.getVAO());
+	glEnableVertexAttribArray(3);
+	glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), (void*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glVertexAttribDivisor(3, 1); 
 	glBindVertexArray(0);
 
 	bool opened = true;
-	const char* items[] = {"sphere", "monkey"};
+	const char* items[] = {"chunk", "cube", "light"};
+	int current = 0;
 
-	glm::vec3 pos = glm::vec3(0.0, 0.0, -3.0);
+	glm::vec3 cubePos(2.0f, 0.0f, -2.0f);
+	glm::vec3 lightPos(5.0f, 3.0f, -5.0f);
 
 	float lastFrame = 0.0f;
+
+	//Adding Shadows
+	GLuint depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+
+	const GLuint SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
+	
+	GLuint depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 	while (!glfwWindowShouldClose(windowManager.getWindow())) {
 		float currentFrame = glfwGetTime();
-		//deltaTime = currentFrame - lastFrame;
 		inputHandler.setDeltaTime(currentFrame - lastFrame);
 		lastFrame = currentFrame;
 
-		//processInput(window);
 		inputHandler.processInput(windowManager.getWindow());
+
+		//Render scene to depth map
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		
+		glm::mat4 lightProjection, lightView;
+		glm::mat4 lightSpaceMatrix;
+		
+		float near_plane = 1.0f, far_plane = 20.0f;
+		lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		lightSpaceMatrix = lightProjection * lightView;
+
+
+
+
+
+		//Render scene as normal
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);	
+		glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -171,45 +168,73 @@ int main()
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection = glm::mat4(1.0f);
 
-		model = glm::translate(model, pos);
+		model = glm::translate(model, chunkPos);
 		view = camera.getViewMat();
 		projection = glm::perspective(glm::radians(camera.getFOV()), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
 
-		//Send MVP to GPU
-		glUseProgram(shaderProgram);
+		shader.use();
+		shader.setMat4(model, "model");
+		shader.setMat4(view, "view");
+		shader.setMat4(projection, "projection");
 
-		unsigned int modelLoc = glGetUniformLocation(shaderProgram, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
-		unsigned int viewLoc = glGetUniformLocation(shaderProgram, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
-		unsigned int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, &projection[0][0]);
+		shader.setVec3(camera.getPos(), "viewPos");
+		shader.setVec3(lightPos, "lightPos");
 
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		texture0.bind();
+		shader.setBool(1, "isInstanced");
+		cubeMesh.renderInstanced(cubePositions.size());
 
-		//ImGui
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePos);
+
+		shader.setMat4(model, "model");
+		texture1.bind();
+		shader.setBool(0, "isInstanced");
+		cubeMesh.render();
+
+		lightShader.use();
+		model = glm::mat4(1.0);
+		model = glm::translate(model, lightPos);
+		model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+
+		lightShader.setMat4(model, "model");
+		lightShader.setMat4(view, "view");
+		lightShader.setMat4(projection, "projection");
+
+		lightCubeMesh.render();
+
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		//Rendering ImGui Here
 		ImGui::SetNextWindowSize(ImVec2(300, 400));
 		if (ImGui::Begin("Test", &opened, ImGuiWindowFlags_NoResize |
-			ImGuiWindowFlags_NoCollapse)) {
+			ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove)) {
 			
 			if (ImGui::Button("Hello, world!")) {
 				std::cout << "Hello, world!" << std::endl;
 			}
 
 			float f = 5.0; 
-			int current = 0;
-			ImGui::Checkbox("Enable Shadows", &opened);
-			ImGui::DragFloat3("Test Float", &pos[0], 0.05f);
 			ImGui::Combo("Objects", &current, items, IM_ARRAYSIZE(items));
+			if (current == 0) {
+				ImGui::DragFloat3("ChunkPos", &chunkPos[0], 0.05f);
+			}
+			else if(current == 1) {
+				ImGui::DragFloat3("CubePos", &cubePos[0], 0.05f);
+			}
+			else if (current == 2) {
+				ImGui::DragFloat3("lightPos", &lightPos[0], 0.05f);
+			}
+			ImGui::Text("Camera Position: (%.1f, %.1f, %.1f)",
+				camera.getPos().x, camera.getPos().y, camera.getPos().z);
+			ImGui::Text("Camera Rotation: (%.1f, %.1f)",
+				camera.getYaw(), camera.getPitch());
+			ImGui::Text("Camera Front: (%.1f, %.1f, %.1f)",
+				camera.getFront().x, camera.getFront().y, camera.getFront().z);
+		}
 
-		}ImGui::End();
-
+		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -217,23 +242,7 @@ int main()
 		windowManager.pullEvents();
 	}
 
-	//Shutdowning ImGui
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
-
-const char* readConfigFile(const char* filename)
-{
-	std::ifstream file(filename);
-	if (!file.is_open()) {
-		std::cerr << "Failed to open config file: " << filename << std::endl;
-		return nullptr;
-	}
-	std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-	char* buffer = new char[content.size() + 1];
-	std::copy(content.begin(), content.end(), buffer);
-	buffer[content.size()] = '\0';
-	return buffer;
-}
-

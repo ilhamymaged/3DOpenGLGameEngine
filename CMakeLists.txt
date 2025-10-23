@@ -18,7 +18,11 @@ file(GLOB_RECURSE SRC_FILES src/*.cpp)
 list(APPEND SRC_FILES src/glad.c)
 
 #Create executable
+#if (WIN32)
+#    add_executable (CMakeTarget WIN32 ${SRC_FILES})
+#else()
 add_executable (CMakeTarget ${SRC_FILES})
+#endif()
 
 #Include directories
 target_include_directories(CMakeTarget PRIVATE include)
@@ -26,11 +30,6 @@ target_include_directories(CMakeTarget PRIVATE include)
 #Link libraries
 target_link_libraries(CMakeTarget PRIVATE glfw ImGui)
 
-#Copies Shaders to output directory
-file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
-file(COPY ${CMAKE_SOURCE_DIR}/shaders DESTINATION ${CMAKE_BINARY_DIR})
-
 if (WIN32)
     target_link_libraries(CMakeTarget PRIVATE opengl32)
 endif()
-
