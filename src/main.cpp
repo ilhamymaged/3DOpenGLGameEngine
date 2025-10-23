@@ -5,6 +5,8 @@
 #include <string>
 #include <iostream>
 
+#include <vector>
+
 #include <stb_image.h>
 
 #include <glm/mat4x4.hpp> 
@@ -15,65 +17,26 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+#include <WindowManager.h>
+#include <InputHandler.h>
+#include <Camera.h>
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 #define WINDOW_TITLE "3D Game Engine"
 
-void processInput(GLFWwindow* window);
 const char* readConfigFile(const char* filename);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-
-struct Camera {
-	glm::vec3 pos;
-	glm::vec3 front;
-	glm::vec3 up;
-
-	float fov;
-};
-
-Camera camera = { glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, -1.0f), 
-				  glm::vec3(0.0f, 1.0f, 0.0f), 45.0f};
-float deltaTime;
-float lastFrame;
-float lastX = WINDOW_WIDTH/2.0, lastY = WINDOW_HEIGHT/2.0;
-bool firstMouse = true;
-float yaw = -90.0f;
-float pitch = 0.0f;
-bool paused = false;
-bool ctrlPressedLastFrame = false;
 
 int main()
 {
-	if(!glfwInit()) {
-		std::cerr << "Failed to initialize GLFW" << std::endl;
-		return -1;
-	}
+	WindowManager windowManager(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT);
+	Camera camera;
+	InputHandler inputHandler(camera);
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwSetWindowUserPointer(windowManager.getWindow(), &inputHandler);
+	glfwSetCursorPosCallback(windowManager.getWindow(), InputHandler::mouse_callback);
+	glfwSetScrollCallback(windowManager.getWindow(), InputHandler::scroll_callback);;
 
-	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
-	if(!window) {
-		std::cerr << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
-
-	glfwMakeContextCurrent(window);
-	if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cerr << "Failed to initialize GLAD" << std::endl;
-		return -1;
-	}
-
-	//GLFW General Settings
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-	glfwSwapInterval(0);
-
-	//OPENGL General Settings
 	glEnable(GL_DEPTH_TEST);
 
 	// Setup Dear ImGui context
@@ -85,7 +48,7 @@ int main()
 	ImGui::StyleColorsDark();
 
 	// Setup Platform/Renderer bindings
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplGlfw_InitForOpenGL(windowManager.getWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 460");
 
 	//Load an image
@@ -97,6 +60,12 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	float maxAniso = 0.0f;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAniso);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAniso);
+
+	stbi_set_flip_vertically_on_load(true);
 
 	int width, height, nrChannels;
 	unsigned char* data = stbi_load("assets/Textures/highqualitybrick.jpg", &width, &height, &nrChannels, 0);
@@ -185,13 +154,15 @@ int main()
 
 	glm::vec3 pos = glm::vec3(0.0, 0.0, -3.0);
 
-	while (!glfwWindowShouldClose(window)) {
-
+	float lastFrame = 0.0f;
+	while (!glfwWindowShouldClose(windowManager.getWindow())) {
 		float currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
+		//deltaTime = currentFrame - lastFrame;
+		inputHandler.setDeltaTime(currentFrame - lastFrame);
 		lastFrame = currentFrame;
 
-		processInput(window);
+		//processInput(window);
+		inputHandler.processInput(windowManager.getWindow());
 		glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -201,8 +172,8 @@ int main()
 		glm::mat4 projection = glm::mat4(1.0f);
 
 		model = glm::translate(model, pos);
-		view = glm::lookAt(camera.pos, camera.pos + camera.front, camera.up);
-		projection = glm::perspective(glm::radians(camera.fov), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
+		view = camera.getViewMat();
+		projection = glm::perspective(glm::radians(camera.getFOV()), (float)WINDOW_WIDTH / WINDOW_HEIGHT, 0.1f, 100.0f);
 
 		//Send MVP to GPU
 		glUseProgram(shaderProgram);
@@ -242,65 +213,14 @@ int main()
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+		windowManager.swapBuffers();
+		windowManager.pullEvents();
 	}
 
 	//Shutdowning ImGui
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
-
-	//Destroying the window
-	glfwDestroyWindow(window);
-	glfwTerminate();
-}
-
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		glfwSetWindowShouldClose(window, true);
-	}
-
-	if (!paused) {
-		float scalar = deltaTime * 2.5f;
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			camera.pos += camera.front * scalar;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			camera.pos -= camera.front * scalar;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			camera.pos += glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			camera.pos -= glm::normalize(glm::cross(camera.front, camera.up)) * scalar;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-			camera.pos += camera.up * scalar;
-		}
-
-	}
-
-	bool ctrlPressed = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
-	if (ctrlPressed && !ctrlPressedLastFrame) {
-		paused = !paused;
-
-		if (paused) {
-			// Show cursor and stop camera input
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			firstMouse = true; // reset mouse to avoid jump when unpausing
-		}
-		else {
-			// Hide cursor and resume camera input
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		}
-	}
-	ctrlPressedLastFrame = ctrlPressed;
 }
 
 const char* readConfigFile(const char* filename)
@@ -317,47 +237,3 @@ const char* readConfigFile(const char* filename)
 	return buffer;
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	if (paused) return; 
-
-	if (firstMouse) 
-	{
-		lastX = xpos;
-		lastY = ypos;
-		firstMouse = false;
-	}
-
-	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; 
-	lastX = xpos;
-	lastY = ypos;
-
-	const float sensitivity = 0.1f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
-	yaw += xoffset;
-	pitch += yoffset;
-
-	if (pitch > 89.0f)
-		pitch = 89.0f;
-	if (pitch < -89.0f)
-		pitch = -89.0f;
-
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	camera.front = glm::normalize(direction);
-
-}
-
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-	camera.fov -= (float)yoffset * 5.0f;
-	if (camera.fov < 1.0f)
-		camera.fov = 1.0f;
-	if (camera.fov > 45.0f)
-		camera.fov = 45.0f;
-}
